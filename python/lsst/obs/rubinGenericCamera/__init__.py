@@ -1,1 +1,1 @@
-from ._instrument import RubinGenericCamera
+from ._instrument import *

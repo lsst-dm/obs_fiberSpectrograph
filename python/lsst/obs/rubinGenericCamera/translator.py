@@ -10,16 +10,16 @@ from lsst.obs.lsst.translators.lsst import SIMONYI_TELESCOPE, LsstBaseTranslator
 
 from lsst.utils import getPackageDir
 
-__all__ = ["RubinGenericCameraTranslator"]
+__all__ = ["StarTrackerTranslator", "StarTrackerWideTranslator",]
 
 
 class RubinGenericCameraTranslator(LsstBaseTranslator):
     """Metadata translator for Rubin Generic Camera FITS headers"""
 
-    name = "RubinGenericCamera"
+    name = None                         # you must specialise this class
     """Name of this translation class"""
 
-    supported_instrument = "RubinGenCamXXX"
+    supported_instrument = None         # you must specialise this class
     """Supports the LSST Generic Camera instrument."""
 
     default_search_path = os.path.join(getPackageDir("obs_rubinGenericCamera"), "corrections")
@@ -38,12 +38,10 @@ class RubinGenericCameraTranslator(LsstBaseTranslator):
                   "pressure": None,
                   "temperature": None,
                   "focus_z": None,
-                  "instrument": "RubinGenCamXXX",
                   }
     """Constant mappings"""
 
     _trivial_map = {
-        #"instrument": "INSTRUME",
         "observation_id": "OBSID",
         "science_program": "PROGRAM",
         "detector_name": "CAMMM",
@@ -76,7 +74,14 @@ class RubinGenericCameraTranslator(LsstBaseTranslator):
             `True` if the header is recognized by this class. `False`
             otherwise.
         """
+
         return "INSTRUME" in header and header["INSTRUME"] in ["StarTracker"]
+
+        return False                    # you must specialise this class
+
+    @cache_translation
+    def to_instrument(self):
+        return None                     # you must specialise this class
 
     @cache_translation
     def to_exposure_time(self):
@@ -100,3 +105,105 @@ class RubinGenericCameraTranslator(LsstBaseTranslator):
             self._used_these_cards("DARKTIME")
             return (darkTime, dict(unit=u.s))
         return self.to_exposure_time()
+
+
+class StarTrackerTranslator(RubinGenericCameraTranslator):
+    name = "StarTracker"
+    """Name of this translation class"""
+
+    supported_instrument = "StarTracker"
+    """Supports the Rubin Star Tracker instrument."""
+
+    @classmethod
+    def _is_startracker(cls, header, filename=None):
+        """Indicate whether the supplied header comes from a starTracker
+
+        Parameters
+        ----------
+        header : `dict`-like
+            Header to convert to standardized form.
+        filename : `str`, optional
+            Name of file being translated.
+
+        Returns
+        -------
+        (isStarTracker, isWide) : (`True`, `bool`) or (`False`, `None`)
+            isStarTracker is `True` if the header comes from a starTracker else False
+            isWide is `True` iff isStarTracker is `True` and it's the wide field startracker
+        """
+        #import pdb; pdb.set_trace() 
+        if "INSTRUME" not in header or header["INSTRUME"] != "StarTracker":
+            return (False, None)
+
+        if "OBSID" not in header:
+            return (False, None)
+        
+        camId = int(header["OBSID"][2:5])
+
+        if camId not in (101, 102):
+            return (False, None)
+
+        return (True, True if camId == 101 else False)
+
+
+    @classmethod
+    def can_translate(cls, header, filename=None):
+        """Indicate whether this translation class can translate the
+        supplied header.
+
+        Parameters
+        ----------
+        header : `dict`-like
+            Header to convert to standardized form.
+        filename : `str`, optional
+            Name of file being translated.
+
+        Returns
+        -------
+        can : `bool`
+            `True` if the header is recognized by this class. `False`
+            otherwise.
+        """
+
+        isStarTracker, isWide = cls._is_startracker(header, filename=None)
+
+        return isStarTracker and isWide is False
+
+    @cache_translation
+    def to_instrument(self):
+        return "StarTracker"
+
+
+class StarTrackerWideTranslator(StarTrackerTranslator):
+    name = "StarTrackerWide"
+    """Name of this translation class"""
+
+    supported_instrument = "StarTrackerWide"
+    """Supports the Rubin Star Tracker wide-field instrument."""
+
+    @classmethod
+    def can_translate(cls, header, filename=None):
+        """Indicate whether this translation class can translate the
+        supplied header.
+
+        Parameters
+        ----------
+        header : `dict`-like
+            Header to convert to standardized form.
+        filename : `str`, optional
+            Name of file being translated.
+
+        Returns
+        -------
+        can : `bool`
+            `True` if the header is recognized by this class. `False`
+            otherwise.
+        """
+        isStarTracker, isWide = cls._is_startracker(header, filename=None)
+
+        return isStarTracker and isWide is True
+
+    @cache_translation
+    def to_instrument(self):
+        return "StarTrackerWide"
+    

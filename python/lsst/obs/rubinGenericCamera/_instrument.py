@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = ("RubinGenericCamera",)
+__all__ = ("RubinGenericCamera", "StarTracker", "StarTrackerWide",)
 
 import os.path
 
@@ -29,7 +29,7 @@ from lsst.utils import getPackageDir
 from lsst.obs.base import Instrument, VisitSystem
 from .filters import RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
 
-from .translator import RubinGenericCameraTranslator
+from .translator import *
 
 PACKAGE_DIR = getPackageDir("obs_rubinGenericCamera")
 
@@ -71,9 +71,9 @@ class RubinGenericCamera(Instrument):
        future.
     """
     filterDefinitions = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
-    instrument = "RubinGenCamXXX"
+    instrument = None                   # must specialise!
     policyName = "rubinGenericCamera"
-    translatorClass = RubinGenericCameraTranslator
+    translatorClass = None # RubinGenericCameraTranslator
     visitSystem = VisitSystem.BY_SEQ_START_END
 
     @property
@@ -130,3 +130,35 @@ class RubinGenericCamera(Instrument):
             id=camGeomDetector.getId(),
             full_name=camGeomDetector.getName(),
         )
+
+
+class StarTracker(RubinGenericCamera):
+    """Gen3 Butler specialization of the Rubin Generic Camera for the StarTracker
+
+    Parameters
+    ----------
+    camera : `lsst.cameraGeom.Camera`
+        Camera object from which to extract detector information.
+    filters : `list` of `FilterDefinition`
+        An ordered list of filters to define the set of PhysicalFilters
+        associated with this instrument in the registry.
+    """
+    instrument = "StarTracker"
+    policyName = "starTracker"
+    translatorClass = StarTrackerTranslator
+
+
+class StarTrackerWide(StarTracker):
+    """Gen3 Butler specialization of the Rubin Generic Camera for the wide-field StarTracker
+
+    Parameters
+    ----------
+    camera : `lsst.cameraGeom.Camera`
+        Camera object from which to extract detector information.
+    filters : `list` of `FilterDefinition`
+        An ordered list of filters to define the set of PhysicalFilters
+        associated with this instrument in the registry.
+    """
+    instrument = "StarTrackerWide"
+    policyName = "starTracker" # starTrackerWide if we write the .yaml file
+    translatorClass = StarTrackerWideTranslator

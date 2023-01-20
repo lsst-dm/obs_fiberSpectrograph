@@ -1,13 +1,21 @@
-__all__ = ["RubinGenericCameraRawFormatter"]
+__all__ = ["StarTrackerRawFormatter",  "StarTrackerWideRawFormatter"]
 
-from .translator import RubinGenericCameraTranslator
+from .translator import *
 from lsst.obs.base import FitsRawFormatterBase
 from .filters import RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
-from . import RubinGenericCamera
+from . import *
 
 class RubinGenericCameraRawFormatter(FitsRawFormatterBase):
-    translatorClass = RubinGenericCameraTranslator
+    translatorClass = None
     filterDefinitions = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
 
     def getDetector(self, id):
         return RubinGenericCamera().getCamera()[id]
+
+
+class StarTrackerRawFormatter(RubinGenericCameraRawFormatter):
+    translatorClass = StarTrackerTranslator
+
+
+class StarTrackerWideRawFormatter(RubinGenericCameraRawFormatter):
+    translatorClass = StarTrackerTranslator
