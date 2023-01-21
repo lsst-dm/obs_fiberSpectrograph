@@ -35,9 +35,9 @@ transforms :
 # A list of detectors in the camera; we only have one
 #
 CCDs : &CCDs
-    "1" :
+    "0" :
         detectorType : 0
-        id : 1
+        id : 0
         serial : "TBD"
         offset : [0, 0]                 # mm
         refpos : [1692, 1352]           # centre of chip

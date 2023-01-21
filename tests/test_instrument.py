@@ -14,7 +14,7 @@ class TestStarTracker(InstrumentTests, lsst.utils.tests.TestCase):
 
         self.data = InstrumentTestData(name="StarTracker",
                                        nDetectors=1,
-                                       firstDetectorName="1",
+                                       firstDetectorName="0",
                                        physical_filters=physical_filters)
         self.instrument = lsst.obs.rubinGenericCamera.StarTracker()
 

@@ -29,7 +29,7 @@ class RubinGenericCameraIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase
             self.file = os.path.join(os.path.expanduser("~rlupton"),
                                      "Data", "RubinGC", "raw", "102", "2022-12-08",
                                      "GC102_O_20221208_000211.fits")
-        self.dataIds = [dict(instrument="StarTracker", exposure=2022120800211, detector=1)]
+        self.dataIds = [dict(instrument="StarTracker", exposure=2022120800211, detector=0)]
         self.filterLabel = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS[0].makeFilterLabel()
 
         super().setUp()

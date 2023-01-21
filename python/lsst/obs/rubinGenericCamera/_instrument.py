@@ -71,9 +71,9 @@ class RubinGenericCamera(Instrument):
        future.
     """
     filterDefinitions = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
-    instrument = None                   # must specialise!
+    instrument = None                   # you must specialise this class
     policyName = "rubinGenericCamera"
-    translatorClass = None # RubinGenericCameraTranslator
+    translatorClass = None              # you must specialise this class
     visitSystem = VisitSystem.BY_SEQ_START_END
 
     @property
@@ -94,10 +94,7 @@ class RubinGenericCamera(Instrument):
         return yamlCamera.makeCamera(cameraYamlFile)
 
     def getRawFormatter(self, dataId):
-        # Docstring inherited from Instrument.getRawFormatter
-        # local import to prevent circular dependency
-        from .rawFormatter import RubinGenericCameraRawFormatter
-        return RubinGenericCameraRawFormatter
+        return None
 
     def register(self, registry, update=False):
         # Docstring inherited from Instrument.register
@@ -147,6 +144,12 @@ class StarTracker(RubinGenericCamera):
     policyName = "starTracker"
     translatorClass = StarTrackerTranslator
 
+    def getRawFormatter(self, dataId):
+        # Docstring inherited from Instrument.getRawFormatter
+        # local import to prevent circular dependency
+        from .rawFormatter import StarTrackerRawFormatter
+        return StarTrackerRawFormatter
+
 
 class StarTrackerWide(StarTracker):
     """Gen3 Butler specialization of the Rubin Generic Camera for the wide-field StarTracker
@@ -162,3 +165,9 @@ class StarTrackerWide(StarTracker):
     instrument = "StarTrackerWide"
     policyName = "starTracker" # starTrackerWide if we write the .yaml file
     translatorClass = StarTrackerWideTranslator
+
+    def getRawFormatter(self, dataId):
+        # Docstring inherited from Instrument.getRawFormatter
+        # local import to prevent circular dependency
+        from .rawFormatter import StarTrackerWideRawFormatter
+        return StarTrackerWideRawFormatter

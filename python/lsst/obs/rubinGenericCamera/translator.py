@@ -28,9 +28,9 @@ class RubinGenericCameraTranslator(LsstBaseTranslator):
     default_resource_root = os.path.join(getPackageDir("obs_rubinGenericCamera"), "corrections")
     """Default resource path root to use to locate header correction files."""
 
-    DETECTOR_MAX = 2
+    DETECTOR_MAX = 1
 
-    _const_map = {"detector_num": 1,
+    _const_map = {"detector_num": 0,
                   "physical_filter": "empty",
                   "detector_serial": "0xdeadbeef",
                   "detector_group": "None",
