@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = ("RubinGenericCamera", "StarTracker", "StarTrackerWide",)
+__all__ = ("RubinGenericCamera", "StarTrackerNarrow", "StarTrackerWide", "StarTrackerFast",)
 
 import os.path
 
@@ -129,8 +129,8 @@ class RubinGenericCamera(Instrument):
         )
 
 
-class StarTracker(RubinGenericCamera):
-    """Gen3 Butler specialization of the Rubin Generic Camera for the StarTracker
+class StarTrackerNarrow(RubinGenericCamera):
+    """Gen3 Butler specialization of the Rubin Generic Camera for the narrow-field StarTracker
 
     Parameters
     ----------
@@ -140,18 +140,18 @@ class StarTracker(RubinGenericCamera):
         An ordered list of filters to define the set of PhysicalFilters
         associated with this instrument in the registry.
     """
-    instrument = "StarTracker"
-    policyName = "starTracker"
-    translatorClass = StarTrackerTranslator
+    instrument = "StarTrackerNrw"
+    policyName = "starTrackerNarrow"
+    translatorClass = StarTrackerNarrowTranslator
 
     def getRawFormatter(self, dataId):
         # Docstring inherited from Instrument.getRawFormatter
         # local import to prevent circular dependency
-        from .rawFormatter import StarTrackerRawFormatter
-        return StarTrackerRawFormatter
+        from .rawFormatter import StarTrackerNarrowRawFormatter
+        return StarTrackerNarrowRawFormatter
 
 
-class StarTrackerWide(StarTracker):
+class StarTrackerWide(StarTrackerNarrow):
     """Gen3 Butler specialization of the Rubin Generic Camera for the wide-field StarTracker
 
     Parameters
@@ -163,7 +163,7 @@ class StarTrackerWide(StarTracker):
         associated with this instrument in the registry.
     """
     instrument = "StarTrackerWide"
-    policyName = "starTracker" # starTrackerWide if we write the .yaml file
+    policyName = "starTrackerWide"
     translatorClass = StarTrackerWideTranslator
 
     def getRawFormatter(self, dataId):
@@ -171,3 +171,25 @@ class StarTrackerWide(StarTracker):
         # local import to prevent circular dependency
         from .rawFormatter import StarTrackerWideRawFormatter
         return StarTrackerWideRawFormatter
+
+
+class StarTrackerFast(StarTrackerNarrow):
+    """Gen3 Butler specialization of the Rubin Generic Camera for the high-cadence Star Tracker
+
+    Parameters
+    ----------
+    camera : `lsst.cameraGeom.Camera`
+        Camera object from which to extract detector information.
+    filters : `list` of `FilterDefinition`
+        An ordered list of filters to define the set of PhysicalFilters
+        associated with this instrument in the registry.
+    """
+    instrument = "StarTrackerFast"
+    policyName = "starTrackerFast"
+    translatorClass = StarTrackerFastTranslator
+
+    def getRawFormatter(self, dataId):
+        # Docstring inherited from Instrument.getRawFormatter
+        # local import to prevent circular dependency
+        from .rawFormatter import StarTrackerFastRawFormatter
+        return StarTrackerFastRawFormatter
