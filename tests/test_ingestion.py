@@ -17,8 +17,10 @@ except (LookupError, lsst.pex.exceptions.NotFoundError):
 
 
 #@unittest.skipIf(testDataDirectory is None, "testdata_example must be set up")
-class RubinGenericCameraIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+class StarTrackerIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     instrumentClassName = "lsst.obs.rubinGenericCamera.StarTracker"
+
+    visits = None                       # we don't have a definition of visits
 
     def setUp(self):
         self.ingestdir = os.path.dirname(__file__)
@@ -27,7 +29,7 @@ class RubinGenericCameraIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase
             self.file = os.path.join(testDataDirectory, "example", "raw", "somefile.fits.gz")
         else:
             self.file = os.path.join(os.path.expanduser("~rlupton"),
-                                     "Data", "RubinGC", "raw", "102", "2022-12-08",
+                                     "Data", "RubinGenericCamera", "raw", "102", "2022-12-08",
                                      "GC102_O_20221208_000211.fits")
         self.dataIds = [dict(instrument="StarTracker", exposure=2022120800211, detector=0)]
         self.filterLabel = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS[0].makeFilterLabel()
