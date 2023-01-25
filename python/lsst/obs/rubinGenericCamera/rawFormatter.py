@@ -1,4 +1,4 @@
-__all__ = ["StarTrackerNarrowRawFormatter",  "StarTrackerWideRawFormatter",  "StarTrackerFastRawFormatter",]
+__all__ = ["StarTrackerRawFormatter",  "StarTrackerWideRawFormatter",  "StarTrackerFastRawFormatter",]
 
 from .translator import *
 from lsst.obs.base import FitsRawFormatterBase
@@ -59,9 +59,9 @@ class RubinGenericCameraRawFormatter(FitsRawFormatterBase):
         )
 
 
-class StarTrackerNarrowRawFormatter(RubinGenericCameraRawFormatter):
-    cameraClass = StarTrackerNarrow
-    translatorClass = StarTrackerNarrowTranslator
+class StarTrackerRawFormatter(RubinGenericCameraRawFormatter):
+    cameraClass = StarTracker
+    translatorClass = StarTrackerTranslator
 
 
 class StarTrackerWideRawFormatter(RubinGenericCameraRawFormatter):
@@ -72,3 +72,8 @@ class StarTrackerWideRawFormatter(RubinGenericCameraRawFormatter):
 class StarTrackerFastRawFormatter(RubinGenericCameraRawFormatter):
     cameraClass = StarTrackerFast
     translatorClass = StarTrackerFastTranslator
+
+
+class FiberSpectrographRawFormatter(RubinGenericCameraRawFormatter):
+    cameraClass = FiberSpectrograph
+    translatorClass = FiberSpectrographTranslator

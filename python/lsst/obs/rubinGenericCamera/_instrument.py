@@ -19,14 +19,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = ("RubinGenericCamera", "StarTrackerNarrow", "StarTrackerWide", "StarTrackerFast",)
+__all__ = ("RubinGenericCamera", "StarTracker", "StarTrackerWide", "StarTrackerFast", "FiberSpectrograph")
 
 import os.path
 
 import lsst.obs.base.yamlCamera as yamlCamera
 from lsst.utils.introspection import get_full_type_name
 from lsst.utils import getPackageDir
-from lsst.obs.base import Instrument, VisitSystem
+from lsst.obs.base import VisitSystem
+from lsst.obs.lsst import LsstCam
 from .filters import RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
 
 from .translator import *
@@ -34,7 +35,7 @@ from .translator import *
 PACKAGE_DIR = getPackageDir("obs_rubinGenericCamera")
 
 
-class RubinGenericCamera(Instrument):
+class RubinGenericCamera(LsstCam):
     """Gen3 Butler specialization for the Rubin Generic Cameras
 
     Parameters
@@ -72,52 +73,20 @@ class RubinGenericCamera(Instrument):
     """
     filterDefinitions = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
     instrument = None                   # you must specialise this class
-    policyName = "rubinGenericCamera"
+    policyName = None                   # you must specialise this class
     translatorClass = None              # you must specialise this class
     visitSystem = VisitSystem.BY_SEQ_START_END
-
-    @property
-    def configPaths(self):
-        return [os.path.join(PACKAGE_DIR, "config"),
-                os.path.join(PACKAGE_DIR, "config", self.policyName)]
-
-    @classmethod
-    def getName(cls):
-        # Docstring inherited from Instrument.getName
-        return cls.instrument
 
     @classmethod
     def getCamera(cls):
         # Constructing a YAML camera takes a long time but we rely on
         # yamlCamera to cache for us.
+        # N.b. can't inherit as PACKAGE_DIR isn't in the class 
         cameraYamlFile = os.path.join(PACKAGE_DIR, "policy", f"{cls.policyName}.yaml")
         return yamlCamera.makeCamera(cameraYamlFile)
 
     def getRawFormatter(self, dataId):
         return None
-
-    def register(self, registry, update=False):
-        # Docstring inherited from Instrument.register
-        # The maximum values below make Gen3's ObservationDataIdPacker produce
-        # outputs that match Gen2's ccdExposureId.
-        obsMax = self.translatorClass.max_exposure_id()
-        with registry.transaction():
-            registry.syncDimensionData(
-                "instrument",
-                {
-                    "name": self.getName(),
-                    "detector_max": self.translatorClass.DETECTOR_MAX,
-                    "visit_max": obsMax,
-                    "exposure_max": obsMax,
-                    "class_name": get_full_type_name(self),
-                    "visit_system": self.visitSystem.value,
-                },
-                update=update
-            )
-            for detector in self.getCamera():
-                registry.syncDimensionData("detector", self.extractDetectorRecord(detector), update=update)
-
-            self._registerFilters(registry, update=update)
 
     def extractDetectorRecord(self, camGeomDetector):
         """Create a Gen3 Detector entry dict from a cameraGeom.Detector.
@@ -129,7 +98,7 @@ class RubinGenericCamera(Instrument):
         )
 
 
-class StarTrackerNarrow(RubinGenericCamera):
+class StarTracker(RubinGenericCamera):
     """Gen3 Butler specialization of the Rubin Generic Camera for the narrow-field StarTracker
 
     Parameters
@@ -140,18 +109,18 @@ class StarTrackerNarrow(RubinGenericCamera):
         An ordered list of filters to define the set of PhysicalFilters
         associated with this instrument in the registry.
     """
-    instrument = "StarTrackerNrw"
-    policyName = "starTrackerNarrow"
-    translatorClass = StarTrackerNarrowTranslator
+    instrument = "StarTracker"
+    policyName = "starTracker"
+    translatorClass = StarTrackerTranslator
 
     def getRawFormatter(self, dataId):
         # Docstring inherited from Instrument.getRawFormatter
         # local import to prevent circular dependency
-        from .rawFormatter import StarTrackerNarrowRawFormatter
-        return StarTrackerNarrowRawFormatter
+        from .rawFormatter import StarTrackerRawFormatter
+        return StarTrackerRawFormatter
 
 
-class StarTrackerWide(StarTrackerNarrow):
+class StarTrackerWide(StarTracker):
     """Gen3 Butler specialization of the Rubin Generic Camera for the wide-field StarTracker
 
     Parameters
@@ -173,7 +142,7 @@ class StarTrackerWide(StarTrackerNarrow):
         return StarTrackerWideRawFormatter
 
 
-class StarTrackerFast(StarTrackerNarrow):
+class StarTrackerFast(StarTracker):
     """Gen3 Butler specialization of the Rubin Generic Camera for the high-cadence Star Tracker
 
     Parameters
@@ -193,3 +162,25 @@ class StarTrackerFast(StarTrackerNarrow):
         # local import to prevent circular dependency
         from .rawFormatter import StarTrackerFastRawFormatter
         return StarTrackerFastRawFormatter
+
+
+class FiberSpectrograph(RubinGenericCamera):
+    """Gen3 Butler specialization of the Rubin Generic Camera for the fiber spectrograph
+
+    Parameters
+    ----------
+    camera : `lsst.cameraGeom.Camera`
+        Camera object from which to extract detector information.
+    filters : `list` of `FilterDefinition`
+        An ordered list of filters to define the set of PhysicalFilters
+        associated with this instrument in the registry.
+    """
+    instrument = "FiberSpec"
+    policyName = "fiberSpectrograph"
+    translatorClass = FiberSpectrographTranslator
+
+    def getRawFormatter(self, dataId):
+        # Docstring inherited from Instrument.getRawFormatter
+        # local import to prevent circular dependency
+        from .rawFormatter import FiberSpectrographRawFormatter
+        return FiberSpectrographRawFormatter
