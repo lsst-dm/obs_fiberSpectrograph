@@ -421,11 +421,6 @@ class FiberSpectrographTranslator(LsstBaseTranslator):
     @cache_translation
     def to_visit_id(self):
         """Calculate the visit associated with this exposure.
-
-        Notes
-        -----
-        For LATISS and LSSTCam the default visit is derived from the
-        exposure group.  For other instruments we return the exposure_id.
         """
         return None
 
@@ -433,8 +428,7 @@ class FiberSpectrographTranslator(LsstBaseTranslator):
     def to_exposure_id(self):
         """Generate a unique exposure ID number
 
-        This is a combination of DAYOBS and SEQNUM, and optionally
-        CONTRLLR.
+        This is a combination of DAYOBS and SEQNUM
 
         Returns
         -------
