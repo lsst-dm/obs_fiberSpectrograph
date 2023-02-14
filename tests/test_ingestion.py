@@ -1,4 +1,4 @@
-"""Unit tests for Gen3 RubinGC raw data ingest.
+"""Unit tests for Gen3 fiberSpectrograph raw data ingest.
 """
 
 import unittest
@@ -6,10 +6,10 @@ import os
 import lsst.utils.tests
 
 from lsst.obs.base.ingest_tests import IngestTestBase
-from lsst.obs.rubinGenericCamera import StarTracker
-from lsst.obs.rubinGenericCamera.filters import RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS
+from lsst.obs.fiberSpectrograph import FiberSpectrograph
+from lsst.obs.fiberSpectrograph.filters import FIBER_SPECTROGRAPH_FILTER_DEFINITIONS
 
-testDataPackage = "testdata_rubinGenericCamera"
+testDataPackage = "testdata_fiberSpectrograph"
 try:
     testDataDirectory = lsst.utils.getPackageDir(testDataPackage)
 except (LookupError, lsst.pex.exceptions.NotFoundError):
@@ -17,22 +17,22 @@ except (LookupError, lsst.pex.exceptions.NotFoundError):
 
 
 #@unittest.skipIf(testDataDirectory is None, "testdata_example must be set up")
-class StarTrackerIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
-    instrumentClassName = "lsst.obs.rubinGenericCamera.StarTracker"
+class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+    instrumentClassName = "lsst.obs.fiberSpectrograph.FiberSpectrograph"
 
     visits = None                       # we don't have a definition of visits
 
     def setUp(self):
         self.ingestdir = os.path.dirname(__file__)
-        self.instrument = StarTracker()
+        self.instrument = FiberSpectrograph()
         if testDataDirectory:
             self.file = os.path.join(testDataDirectory, "example", "raw", "somefile.fits.gz")
         else:
             self.file = os.path.join(os.path.expanduser("~rlupton"),
-                                     "Data", "RubinGenericCamera", "raw", "102", "2022-12-08",
-                                     "GC102_O_20221208_000211.fits")
-        self.dataIds = [dict(instrument="StarTracker", exposure=2022120800211, detector=0)]
-        self.filterLabel = RUBIN_GENERIC_CAMERA_FILTER_DEFINITIONS[0].makeFilterLabel()
+                                     "Data", "FiberSpectrograph", "raw",
+                                     "FiberSpectrograph_Broad_fiberSpecBroad_2023-01-16T17_48_42.710.fits")
+        self.dataIds = [dict(instrument="FiberSpectrograph", exposure=20230116, detector=0)]
+        self.filterLabel = FIBER_SPECTROGRAPH_FILTER_DEFINITIONS[0].makeFilterLabel()
 
         super().setUp()
 

@@ -21,7 +21,7 @@
 #
 #
 
-name : "FiberSpectrograph"
+name : "FiberSpec"
 plateScale : 1.0
 
 # Provide transformations *from* the nativeSys *to* the specified system (e.g. FieldAngle)
@@ -39,11 +39,12 @@ CCDs : &CCDs
         detectorType : 0
         id : 0
         serial : "TBD"
-        offset : [0, 0]                 # mm
-        refpos : [1692, 1352]           # centre of chip
+        offset : [0, 0]
+        refpos : [0, 0] 
         # 
-        bbox : &bbox [[0, 0], [3384, 2704]]   # total bbox of trimmed detector
-        pixelSize : [0.015, 0.015]      # in mm
+        #            [[x0,  y0], [xSize, ySize]]
+        bbox : &bbox [[ 0,   0], [ 2048,     1]] # total bbox of trimmed detector
+        pixelSize : [1, 1]       # in mm
         transformDict : {nativeSys : 'Pixels', transforms : None}
         transposeDetector : False
         pitch : 0.0                     # (degrees)
