@@ -27,7 +27,7 @@ class FiberSpectrographRawFormatter(FitsRawFormatterBase):
         pytype = self.fileDescriptor.storageClass.pytype
         path = self.fileDescriptor.location.path
 
-        md = fitsio.read_header(path)
+        md = dict(fitsio.read_header(path))
         flux = fitsio.read(path)
         wavelength = fitsio.read(path, ext=md["PS1_0"], columns=md["PS1_1"]).flatten()
 

@@ -68,12 +68,12 @@ CCDs : &CCDs
               rawParallelPrescanBBox  : [[0,    0], [0,         0]] # pixels digitised before first parallel
               rawParallelOverscanBBox : [[0,    0], [0,         0]] # parallel overscan
 
-              saturation : 65535                  # saturation level, DN XXX Should this be in electrons?
+              saturation : 16383        # saturation level, DN XXX Should this be in electrons?
 
               # Linearity correction is still under discussion, so this is a placeholder.
               linearityType : PROPORTIONAL
               linearityThreshold : 0
-              linearityMax : 65535                # == saturation
+              linearityMax : 65535
               linearityCoeffs : [0, 65535]        # == [linearityThreshold, linearityMax]
 
               gain : 1.00
