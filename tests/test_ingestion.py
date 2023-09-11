@@ -31,7 +31,10 @@ class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase)
             self.file = os.path.join(os.path.expanduser("~rlupton"),
                                      "Data", "FiberSpectrograph", "raw",
                                      "FiberSpectrograph_Broad_fiberSpecBroad_2023-01-16T17_48_42.710.fits")
-        self.dataIds = [dict(instrument="FiberSpectrograph", exposure=20230116, detector=0)]
+
+        day_obs = 20230116
+        seq_num = 21
+        self.dataIds = [dict(instrument="FiberSpectrograph", exposure=100000*day_obs + seq_num, detector=0)]
         self.filterLabel = FIBER_SPECTROGRAPH_FILTER_DEFINITIONS[0].makeFilterLabel()
 
         super().setUp()
