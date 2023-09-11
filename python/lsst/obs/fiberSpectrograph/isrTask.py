@@ -106,7 +106,11 @@ class IsrTask(lsst.ip.isr.IsrTask):
 
     def maskAmplifier(self, ccdExposure, amp, defects):
         flux = ccdExposure.flux
-        flux[flux > amp.getSaturation()] = np.NaN
+
+        saturated = flux > amp.getSaturation()
+        flux[saturated] = np.NaN
+        ccdExposure.mask[saturated] |= ccdExposure.getPlaneBitMask(self.config.saturatedMaskName)
+
         return False
 
     def roughZeroPoint(self, exposure):

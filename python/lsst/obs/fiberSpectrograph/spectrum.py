@@ -21,10 +21,12 @@
 
 __all__ = ("Spectrum",)
 
+import numpy as np
 import astropy.io.fits
 import fitsio
 import astropy.units as u
 from ._instrument import FiberSpectrograph
+import lsst.afw.image as afwImage
 
 
 class VisitInfo:
@@ -51,6 +53,11 @@ class Spectrum:
 
         self.info = Info(md)
         self.detector = FiberSpectrograph().getCamera()[0]
+
+        self.__Mask = afwImage.MaskX(1, 1)
+        self.getPlaneBitMask = self.__Mask.getPlaneBitMask  # ughh, awful Mask API
+        self.mask = np.zeros(flux.shape, dtype=self.__Mask.array.dtype)
+        self.variance = np.zeros_like(flux)
 
     def getDetector(self):
         return self.detector
