@@ -9,14 +9,17 @@ from lsst.obs.base.ingest_tests import IngestTestBase
 from lsst.obs.fiberSpectrograph import FiberSpectrograph
 from lsst.obs.fiberSpectrograph.filters import FIBER_SPECTROGRAPH_FILTER_DEFINITIONS
 
+
 testDataPackage = "testdata_fiberSpectrograph"
 try:
     testDataDirectory = lsst.utils.getPackageDir(testDataPackage)
 except (LookupError, lsst.pex.exceptions.NotFoundError):
     testDataDirectory = None
+testDataDirectory = os.path.join(os.path.dirname(__file__), "data")
 
 
-#@unittest.skipIf(testDataDirectory is None, "testdata_example must be set up")
+# @unittest.skipIf(testDataDirectory is None,
+#                  "testdata_example must be set up")
 class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     instrumentClassName = "lsst.obs.fiberSpectrograph.FiberSpectrograph"
 
@@ -26,7 +29,7 @@ class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase)
         self.ingestdir = os.path.dirname(__file__)
         self.instrument = FiberSpectrograph()
         if testDataDirectory:
-            self.file = os.path.join(testDataDirectory, "example", "raw", "somefile.fits.gz")
+            self.file = os.path.join(testDataDirectory, "rawSpectrum_FiberSpec_empty_21_0_FiberSpec_raw_all.fits")
         else:
             self.file = os.path.join(os.path.expanduser("~rlupton"),
                                      "Data", "FiberSpectrograph", "raw",
