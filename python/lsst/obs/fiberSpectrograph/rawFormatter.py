@@ -6,7 +6,7 @@ from ._instrument import FiberSpectrograph
 from .translator import FiberSpectrographTranslator
 import fitsio
 import astropy.units as u
-
+from lsst.daf.base import PropertyList
 
 class FiberSpectrographRawFormatter(FitsRawFormatterBase):
     cameraClass = FiberSpectrograph
@@ -27,7 +27,13 @@ class FiberSpectrographRawFormatter(FitsRawFormatterBase):
         pytype = self.fileDescriptor.storageClass.pytype
         path = self.fileDescriptor.location.path
 
-        md = dict(fitsio.read_header(path))
+        sourceMd = dict(fitsio.read_header(path))
+        md = PropertyList()
+        md.update(sourceMd)
+        if component is not None:
+            if component == 'metadata':
+                return md
+
         flux = fitsio.read(path)
         wavelength = fitsio.read(path, ext=md["PS1_0"], columns=md["PS1_1"]).flatten()
 

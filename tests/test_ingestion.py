@@ -22,8 +22,8 @@ testDataDirectory = os.path.join(os.path.dirname(__file__), "data")
 #                  "testdata_example must be set up")
 class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     instrumentClassName = "lsst.obs.fiberSpectrograph.FiberSpectrograph"
-
     visits = None                       # we don't have a definition of visits
+    ingestDatasetTypeName = "rawSpectrum"
 
     def setUp(self):
         self.ingestdir = os.path.dirname(__file__)
@@ -37,7 +37,7 @@ class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase)
 
         day_obs = 20230116
         seq_num = 21
-        self.dataIds = [dict(instrument="FiberSpectrograph", exposure=100000*day_obs + seq_num, detector=0)]
+        self.dataIds = [dict(instrument="FiberSpec", exposure=100000*day_obs + seq_num, detector=0)]
         self.filterLabel = FIBER_SPECTROGRAPH_FILTER_DEFINITIONS[0].makeFilterLabel()
 
         super().setUp()
