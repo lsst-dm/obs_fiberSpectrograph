@@ -29,7 +29,8 @@ class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase)
         self.ingestdir = os.path.dirname(__file__)
         self.instrument = FiberSpectrograph()
         if testDataDirectory:
-            self.file = os.path.join(testDataDirectory, "rawSpectrum_FiberSpec_empty_21_0_FiberSpec_raw_all.fits")
+            self.file = os.path.join(testDataDirectory,
+                                     "rawSpectrum_FiberSpec_empty_21_0_FiberSpec_raw_all.fits")
         else:
             self.file = os.path.join(os.path.expanduser("~rlupton"),
                                      "Data", "FiberSpectrograph", "raw",
@@ -37,7 +38,7 @@ class FiberSpectrographIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase)
 
         day_obs = 20230116
         seq_num = 21
-        self.dataIds = [dict(instrument="FiberSpec", exposure=100000*day_obs + seq_num, detector=0)]
+        self.dataIds = [dict(instrument="FiberSpec", exposure=100000 * day_obs + seq_num, detector=0)]
         self.filterLabel = FIBER_SPECTROGRAPH_FILTER_DEFINITIONS[0].makeFilterLabel()
 
         super().setUp()

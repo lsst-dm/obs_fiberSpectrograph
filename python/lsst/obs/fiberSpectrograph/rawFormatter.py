@@ -8,6 +8,7 @@ import fitsio
 import astropy.units as u
 from lsst.daf.base import PropertyList
 
+
 class FiberSpectrographRawFormatter(FitsRawFormatterBase):
     cameraClass = FiberSpectrograph
     translatorClass = FiberSpectrographTranslator

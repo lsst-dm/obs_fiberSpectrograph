@@ -18,6 +18,7 @@ class TestStarTracker(InstrumentTests, lsst.utils.tests.TestCase):
                                        physical_filters=physical_filters)
         self.instrument = lsst.obs.fiberSpectrograph.FiberSpectrograph()
 
+
 if __name__ == '__main__':
     lsst.utils.tests.init()
     unittest.main()
