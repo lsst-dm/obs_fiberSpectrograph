@@ -34,20 +34,20 @@ class IsrTaskConnections(lsst.ip.isr.isrTask.IsrTaskConnections):
     ccdExposure = cT.Input(
         name="rawSpectrum",
         doc="Input spectrum to process.",
-        storageClass="Spectrum",
+        storageClass="FiberSpectrum",
         dimensions=["instrument", "exposure", "detector"],
     )
     bias = cT.PrerequisiteInput(
         name="bias",
         doc="Input bias calibration.",
-        storageClass="Spectrum",
+        storageClass="FiberSpectrum",
         dimensions=["instrument", "detector"],
         isCalibration=True,
     )
     outputExposure = cT.Output(
         name="spectrum",
         doc="Corrected spectrum.",
-        storageClass="Spectrum",
+        storageClass="FiberSpectrum",
         dimensions=["instrument", "exposure", "detector"],
     )
 
