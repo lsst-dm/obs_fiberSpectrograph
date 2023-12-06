@@ -51,7 +51,7 @@ class FiberSpectrograph(LsstCam):
     visitSystem = VisitSystem.BY_SEQ_START_END
     raw_definition = ("rawSpectrum",
                       ("instrument", "physical_filter", "exposure", "detector"),
-                      "Spectrum")
+                      "FiberSpectrum")
 
     @classmethod
     def getCamera(cls):

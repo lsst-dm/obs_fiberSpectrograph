@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = ("Spectrum",)
+__all__ = ("FiberSpectrum",)
 
 import numpy as np
 import astropy.io.fits
@@ -45,7 +45,7 @@ class Info:
         return self.visitInfo
 
 
-class Spectrum:
+class FiberSpectrum:
     def __init__(self, wavelength, flux, md=None):
         self.wavelength = wavelength
         self.flux = flux
@@ -85,7 +85,7 @@ class Spectrum:
 
         Returns
         -------
-        spectrum : `~lsst.obs.fiberSpectrograph.Spectrum`
+        spectrum : `~lsst.obs.fiberSpectrograph.FiberSpectrum`
             In-memory spectrum.
         """
         md = dict(fitsio.read_header(path))
@@ -94,7 +94,7 @@ class Spectrum:
 
         wavelength = u.Quantity(wavelength, u.Unit(md["CUNIT1"]), copy=False)
 
-        return Spectrum(wavelength, flux, md)
+        return FiberSpectrum(wavelength, flux, md)
 
     def writeFits(self, path):
         """Write a Spectrum to disk
